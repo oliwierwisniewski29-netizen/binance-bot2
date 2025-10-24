@@ -11,24 +11,30 @@ from telegram.ext import Updater, CommandHandler, CallbackContext
 # --------- KONFIGURACJA (DOSTOSUJ) ----------
 TELEGRAM_BOT_TOKEN = "7805151071:AAHrEMA0DTq5gB1No6IJBy1ORwTbwh3Ngy0"
 # Możesz dodać wiele Chat ID — rozdziel przecinkami w nawiasie []
-ALLOWED_CHAT_IDS = ["7684314138", "7510096984"]
+ALLOWED_CHAT_IDS = ["7684314138"]
 BINANCE_WS = "wss://stream.binance.com:9443/ws/!miniTicker@arr"  # zbiorcze mini-tickery
 WINDOW_SECONDS = 5
 MIN_VOLUME_USD = 2000
-PCT_THRESHOLD = 20.0
+PCT_THRESHOLD = 0.01
 MIN_PRICE = 0.05
 # --------------------------------------------
 
 # prosty helper do wysyłki Telegram
 def send_telegram(text):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True}
-    try:
-        r = requests.post(url, data=payload, timeout=10)
-        return r.ok
-    except Exception as e:
-        print("Telegram send error:", e)
-        return False
+    for chat_id in ALLOWED_CHAT_IDS:
+        payload = {
+            "chat_id": chat_id,
+            "text": text,
+            "parse_mode": "HTML",
+            "disable_web_page_preview": True
+        }
+        try:
+            r = requests.post(url, data=payload, timeout=10)
+            if not r.ok:
+                print(f"⚠️ Błąd wysyłki do {chat_id}: {r.text}")
+        except Exception as e:
+            print(f"Telegram send error ({chat_id}):", e)
 
 # przechowujemy historię cen
 price_history = defaultdict(lambda: deque())
