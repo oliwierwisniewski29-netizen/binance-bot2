@@ -16,7 +16,7 @@ BINANCE_WS = "wss://stream.binance.com:9443/ws/!miniTicker@arr"  # zbiorcze mini
 WINDOW_SECONDS = 5
 MIN_VOLUME_USD = 2000
 PCT_THRESHOLD = 20.0
-MIN_PRICE = 0.05
+MIN_PRICE = 0.03
 # --------------------------------------------
 
 # prosty helper do wysyłki Telegram
